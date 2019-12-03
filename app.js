@@ -9,38 +9,40 @@ GAME RULES:
 
 */
 
-let currentPlayer, globalScore, score;
+let globalScore, currentPlayer, score;
 
+globalScore = [0, 0];
 currentPlayer = 0;
-globalScore = 0;
 score = 0;
 
 
 document.querySelector('.btn-roll').addEventListener('click', function () {
 
     //Random dice between 1 and 6
-    const ranNum = Math.floor((Math.random() * 6) + 1);
+    let ranNum = Math.floor((Math.random() * 6) + 1);
 
-    //Attach random number to dice png
-    const ranDice = document.querySelector('.dice').src = 'dice-' + ranNum + '.png';
+    //Random number chooses dice png
+    document.querySelector('.dice').style.display = 'block';
+    let ranDice = document.querySelector('.dice').src = './Pictures/dice-' + ranNum + '.png';
 
-    //Dice number is added to current score
-    if (ranDice !== 'dice-1.png') {
+    //Add dice to current score
+    if (ranDice !== './Pictures/dice-1.png') {
         score += ranNum;
         document.getElementById('current-' + currentPlayer).textContent = score;
     } else {
     //Next Player
         nextPlayer();
-
-        //How to connect player element with current player variable???
     }
     
 });
 
+
+
+
 document.querySelector('.btn-hold').addEventListener('click', function () {
     //Add current score to global score
-    let totalScore = globalScore += score;
-    document.getElementById('score-' + currentPlayer).textContent = globalScore;
+    globalScore[currentPlayer] += score;
+    document.getElementById('score-' + currentPlayer).textContent = globalScore[currentPlayer];
 
     //Switch to next player
     nextPlayer();
@@ -48,13 +50,43 @@ document.querySelector('.btn-hold').addEventListener('click', function () {
 });
 
 
+
+document.querySelector('.btn-new').addEventListener('click', function () {
+    //Reset all scores
+    globalScore = [0, 0];
+    currentPlayer = 0;
+    score = 0;
+
+    document.querySelector('.dice').style.display = 'none';
+
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+
+    document.getElementById('score-0').textContent = '0';
+    document.getElementById('score-1').textContent = '0';
+
+    //Reset styling
+
+
+});
+
+
 function nextPlayer() {
     currentPlayer === 0 ? currentPlayer = 1 : currentPlayer = 0;
+    score = 0;
 
     document.querySelector('.player-0-panel').classList.toggle('active');
     document.querySelector('.player-1-panel').classList.toggle('active');
 
-    document.
-    
+    document.getElementById('current-0').textContent = '0';
+    document.getElementById('current-1').textContent = '0';
+
+    document.querySelector('.dice').style.display = 'none';
 }
 
+
+function winGame() {
+    if (globalScore[currentPlayer] >= 20) {
+        
+    }
+}
