@@ -9,15 +9,13 @@ GAME RULES:
 
 */
 
-let globalScore, currentPlayer, score;
+let globalScore, currentPlayer, score, gamePlaying;
 
-globalScore = [0, 0];
-currentPlayer = 0;
-score = 0;
+startGame();
 
 
 document.querySelector('.btn-roll').addEventListener('click', function () {
-
+  if (gamePlaying) {
     //Random dice between 1 and 6
     let ranNum = Math.floor((Math.random() * 6) + 1);
 
@@ -27,35 +25,56 @@ document.querySelector('.btn-roll').addEventListener('click', function () {
 
     //Add dice to current score
     if (ranDice !== './Pictures/dice-1.png') {
-        score += ranNum;
-        document.getElementById('current-' + currentPlayer).textContent = score;
+      score += ranNum;
+      document.getElementById('current-' + currentPlayer).textContent = score;
     } else {
-    //Next Player
-        nextPlayer();
-    }
-    
-});
 
+    //Next Player
+    nextPlayer();
+    }
+  }
+});
 
 
 
 document.querySelector('.btn-hold').addEventListener('click', function () {
+  if (gamePlaying) {
     //Add current score to global score
     globalScore[currentPlayer] += score;
     document.getElementById('score-' + currentPlayer).textContent = globalScore[currentPlayer];
 
+    //Check if player won GAME
+    if (globalScore[currentPlayer] >= 20) {
+      document.getElementById('name-' + currentPlayer).textContent = 'YOU WIN!';
+      document.querySelector('.player-' + currentPlayer + '-panel').classList.add('winner');
+      document.querySelector('.player-' + currentPlayer + '-panel').classList.remove('active');
+      gamePlaying = false;
+    } else {
+
     //Switch to next player
     nextPlayer();
-
+    }
+  }
 });
 
 
 
-document.querySelector('.btn-new').addEventListener('click', function () {
+document.querySelector('.btn-new').addEventListener('click', startGame)
+
+  function startGame () {
     //Reset all scores
     globalScore = [0, 0];
     currentPlayer = 0;
     score = 0;
+    gamePlaying = true;
+
+    document.getElementById('name-0').textContent = 'Player 1';
+    document.getElementById('name-1').textContent = 'Player 2';
+
+    document.querySelector('.player-0-panel').classList.remove('winner');
+    document.querySelector('.player-1-panel').classList.remove('winner');
+
+    document.querySelector('.player-' + currentPlayer + '-panel').classList.add('active');
 
     document.querySelector('.dice').style.display = 'none';
 
@@ -64,11 +83,8 @@ document.querySelector('.btn-new').addEventListener('click', function () {
 
     document.getElementById('score-0').textContent = '0';
     document.getElementById('score-1').textContent = '0';
+  }
 
-    //Reset styling
-
-
-});
 
 
 function nextPlayer() {
@@ -82,11 +98,4 @@ function nextPlayer() {
     document.getElementById('current-1').textContent = '0';
 
     document.querySelector('.dice').style.display = 'none';
-}
-
-
-function winGame() {
-    if (globalScore[currentPlayer] >= 20) {
-        
-    }
 }
